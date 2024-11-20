@@ -4,6 +4,7 @@ from rest_framework import status, permissions
 from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
+from rest_framework.permissions import AllowAny
 from .serializers import RegisterSerializer, ProfileSerializer
 
 User = get_user_model()
@@ -36,6 +37,7 @@ class LoginView(APIView):
 
 
 class ProfileView(APIView):
+    # permission_classes = [AllowAny]
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
