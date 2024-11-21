@@ -1,9 +1,10 @@
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, status
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import permission_classes
-from .models import Restaurant, Menu
-from .serializers import RestaurantSerializer, MenuSerializer
-from rest_framework.permissions import IsAuthenticated
+from .models import Restaurant, Menu, Order
+from .serializers import RestaurantSerializer, MenuSerializer, OrderSerializer
+from rest_framework.permissions import IsAuthenticated, AllowAny
 
 class RestaurantListView(generics.ListAPIView):
     queryset = Restaurant.objects.all()
@@ -71,3 +72,39 @@ class MenuCreateView(generics.CreateAPIView):
         if restaurant.owner != request.user:
             raise PermissionError("You are not the owner of this restaurant.")
         return super().check_permissions(request)
+
+
+class OrderCreateView(generics.CreateAPIView):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class OrderDetailView(generics.RetrieveAPIView):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class OrderStatusUpdateView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def put(self, request, pk):
+        try:
+            order = Order.objects.get(pk=pk)
+            if order.restaurant.owner != request.user:
+                return Response({"detail": "Permission denied."}, status=status.HTTP_403_FORBIDDEN)
+            new_status = request.data.get("status")
+            if new_status not in dict(Order.STATUS_CHOICES):
+                return Response({"detail": "Invalid status."}, status=status.HTTP_400_BAD_REQUEST)
+            order.status = new_status
+            order.save()
+            return Response({"detail": "Order status updated successfully."})
+        except Order.DoesNotExist:
+            return Response({"detail": "Order not found."}, status=status.HTTP_404_NOT_FOUND)
+
+class UserOrderListView(generics.ListAPIView):
+    serializer_class = OrderSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [AllowAny]
+
+    def get_queryset(self):
+        return Order.objects.filter(user=self.request.user)

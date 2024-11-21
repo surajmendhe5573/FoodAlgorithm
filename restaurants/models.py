@@ -28,3 +28,20 @@ class Menu(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Order(models.Model):
+    STATUS_CHOICES = [
+        ('Pending', 'Pending'),
+        ('Accepted', 'Accepted'),
+        ('In Progress', 'In Progress'),
+        ('Completed', 'Completed'),
+        ('Cancelled', 'Cancelled'),
+    ]
+
+    user = models.ForeignKey(User, related_name='orders', on_delete=models.CASCADE)
+    restaurant = models.ForeignKey(Restaurant, related_name='orders', on_delete=models.CASCADE)
+    menu_items = models.ManyToManyField(Menu, related_name='orders')
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, null=False)  # Ensure `null=False`
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
+    timestamp = models.DateTimeField(auto_now_add=True)
