@@ -39,5 +39,5 @@ This project is a REST API for an online food delivery platform. It provides fea
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/online-food-delivery-system.git
-   cd online-food-delivery-system
+   git clone https://github.com/surajmendhe5573/FoodAlgorithm.git
+   cd FoodAlgorithm
