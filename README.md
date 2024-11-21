@@ -34,6 +34,7 @@ This project is a REST API for an online food delivery platform. It provides fea
 - **Authentication:** JSON Web Tokens (JWT)
 - **Geolocation:** Google Maps API/Geocoding API
 - **Containerization:** Docker
+  
 
 ## Installation
 
