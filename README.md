@@ -1,7 +1,7 @@
 # Online Food Delivery System
 
 ## Description
-This project is a REST API for an online food delivery platform. It provides features like user registration, restaurant and menu management, order tracking, geolocation-based restaurant search, and real-time notifications.
+This project is a REST API for an online food delivery platform. It provides features like user registration, restaurant and menu management, order tracking, geolocation-based restaurant search, and real-time notifications
 
 ## Features
 
